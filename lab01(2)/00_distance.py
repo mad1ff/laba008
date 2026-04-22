@@ -15,6 +15,14 @@ sites = {
 distances = {}
 
 # TODO здесь заполнение словаря
+for city1, coords1 in sites.items():
+    distances[city1] = {}
+    for city2, coords2 in sites.items():
+        if city1 != city2:
+            x1, y1 = coords1
+            x2, y2 = coords2
+            dist = ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+            distances[city1][city2] = dist
 
 print(distances)
 
