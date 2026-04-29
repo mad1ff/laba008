@@ -1,15 +1,23 @@
-# Далее, пусть есть координаты точки
+RADIUS = 42
+PI=3.1415926
+
+def calculate_area(radius = RADIUS, pi = PI):
+    S=pi*radius**2
+    return round(S, 4)
+
+def length_comparison (point, radius = RADIUS):
+    x, y = point
+    distance = (x**2 + y**2)**(1/2)
+    return distance < radius
+
+
 point_1 = (23, 34)
-# где 23 - координата х, 34 - координата у
-
-# Если точка point лежит внутри того самого круга [центр в начале координат (0, 0), radius = 42],
-# то выведите на консоль True, Или False, если точка лежит вовне круга.
-distance_1 = (point_1[0] ** 2 + point_1[1] ** 2) ** 0.5
-print(distance_1 <= radius)
-
-# Аналогично для другой точки
 point_2 = (30, 30)
-# Если точка point_2 лежит внутри круга (radius = 42), то выведите на консоль True,
-# Или False, если точка лежит вовне круга.
-distance_2 = (point_2[0] ** 2 + point_2[1] ** 2) ** 0.5
-print(distance_2 <= radius)
+def ploshad():
+    print(calculate_area())
+    print(length_comparison(point_1))
+    print(length_comparison(point_2))
+
+
+
+
