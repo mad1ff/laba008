@@ -8,16 +8,16 @@ my_family_height = [
     ['Брат 2', 154]
 ]
 
-
-for i in my_family_height:
-    if i[0] == 'Папа':
-        print(f'Рост отца - {i[1]} см')
-        break
-
 Allheight = 0
 for j in my_family_height:
     Allheight += j[1]
 
 def semia():
     print(f'Общий рост моей семьи - {Allheight} см')
-    print(height_father())
+    for i in my_family_height:
+        if i[0] == 'Папа':
+            print(f'Рост отца - {i[1]} см')
+            break
+
+
+
