@@ -1,0 +1,199 @@
+# lab4.py
+# Лабораторная работа №4
+# Вариант 8: Замыкание для среднего арифметического + декоратор проверки типов и диапазона
+
+# ============================================================
+# ЧАСТЬ 1: ЗАМЫКАНИЕ (Rare)
+# ============================================================
+
+def make_average():
+    """
+    Замыкание для вычисления среднего арифметического всех переданных аргументов.
+    """
+    numbers = []
+    
+    def average(value=None):
+        if value is not None:
+            numbers.append(value)
+        
+        if not numbers:
+            return 0
+        
+        return sum(numbers) / len(numbers)
+    
+    return average
+
+
+# ============================================================
+# ЧАСТЬ 2: ДЕКОРАТОР (Medium)
+# ============================================================
+
+def validate_args(type_check=None, min_value=None, max_value=None):
+    """
+    Декоратор для проверки аргументов функции на тип и диапазон значений.
+    """
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            # Проверяем позиционные аргументы
+            for i, arg in enumerate(args):
+                if type_check is not None and not isinstance(arg, type_check):
+                    raise TypeError(f"Аргумент {i} должен быть типа {type_check.__name__}, получен {type(arg).__name__}")
+                
+                if min_value is not None and arg < min_value:
+                    raise ValueError(f"Аргумент {i} = {arg} меньше минимального значения {min_value}")
+                
+                if max_value is not None and arg > max_value:
+                    raise ValueError(f"Аргумент {i} = {arg} больше максимального значения {max_value}")
+            
+            # Проверяем именованные аргументы
+            for key, arg in kwargs.items():
+                if type_check is not None and not isinstance(arg, type_check):
+                    raise TypeError(f"Аргумент {key} должен быть типа {type_check.__name__}, получен {type(arg).__name__}")
+                
+                if min_value is not None and arg < min_value:
+                    raise ValueError(f"Аргумент {key} = {arg} меньше минимального значения {min_value}")
+                
+                if max_value is not None and arg > max_value:
+                    raise ValueError(f"Аргумент {key} = {arg} больше максимального значения {max_value}")
+            
+            return func(*args, **kwargs)
+        
+        return wrapper
+    return decorator
+
+
+# ============================================================
+# ПРИМЕР ИСПОЛЬЗОВАНИЯ
+# ============================================================
+
+@validate_args(type_check=(int, float), min_value=-100, max_value=100)
+def safe_add(a, b):
+    return a + b
+
+@validate_args(type_check=int, min_value=0, max_value=10)
+def safe_multiply(a, b):
+    return a * b
+
+
+# ============================================================
+# ДЕМОНСТРАЦИЯ РАБОТЫ
+# ============================================================
+
+if __name__ == "__main__":
+    print("=" * 60)
+    print("ЛАБОРАТОРНАЯ РАБОТА №4 (Вариант 8)")
+    print("=" * 60)
+    
+    # ЧАСТЬ 1: Замыкание
+    print("\n【 ЧАСТЬ 1: ЗАМЫКАНИЕ ДЛЯ СРЕДНЕГО АРИФМЕТИЧЕСКОГО 】")
+    
+    avg = make_average()
+    numbers_to_test = [10, 20, 30, 40, 50]
+    print(f"\nДобавляем числа: {numbers_to_test}")
+    
+    for num in numbers_to_test:
+        current_avg = avg(num)
+        print(f"   Добавлено {num}, текущее среднее: {current_avg}")
+    
+    print(f"\nФинальное среднее: {avg()}")
+    print(f"Проверка: (10+20+30+40+50)/5 = {sum(numbers_to_test)/len(numbers_to_test)}")
+    
+    # ЧАСТЬ 2: Декоратор
+    print("\n" + "=" * 60)
+    print("【 ЧАСТЬ 2: ДЕКОРАТОР ПРОВЕРКИ АРГУМЕНТОВ 】")
+    
+    print("\n✓ Успешные вызовы:")
+    print(f"   safe_add(50, 30) = {safe_add(50, 30)}")
+    print(f"   safe_add(10.5, 20.3) = {safe_add(10.5, 20.3)}")
+    print(f"   safe_multiply(5, 3) = {safe_multiply(5, 3)}")
+    
+    print("\n✗ Вызовы с ошибками (перехвачены исключения):")
+    
+    try:
+        safe_multiply(5.5, 3)
+    except (TypeError, ValueError) as e:
+        print(f"   safe_multiply(5.5, 3) → Ошибка: {e}")
+    
+    try:
+        safe_multiply(20, 3)
+    except (TypeError, ValueError) as e:
+        print(f"   safe_multiply(20, 3) → Ошибка: {e}")
+    
+    try:
+        safe_add(200, 50)
+    except (TypeError, ValueError) as e:
+        print(f"   safe_add(200, 50) → Ошибка: {e}")
+    
+    try:
+        safe_add(-150, 20)
+    except (TypeError, ValueError) as e:
+        print(f"   safe_add(-150, 20) → Ошибка: {e}")
+    
+    print("\n" + "=" * 60)
+    print("Для запуска тестов выполните: pytest lab4.py -v")
+    print("=" * 60)
+
+
+# ============================================================
+# ТЕСТЫ ДЛЯ PYTEST
+# ============================================================
+
+def test_average_closure():
+    avg = make_average()
+    assert avg(10) == 10.0
+    assert avg(20) == 15.0
+    assert avg(30) == 20.0
+    assert avg() == 20.0
+
+def test_average_empty():
+    avg = make_average()
+    assert avg() == 0
+
+def test_average_single():
+    avg = make_average()
+    assert avg(42) == 42.0
+    assert avg() == 42.0
+
+def test_decorator_success():
+    @validate_args(type_check=int, min_value=0, max_value=100)
+    def test_func(x):
+        return x * 2
+    assert test_func(50) == 100
+    assert test_func(0) == 0
+    assert test_func(100) == 200
+
+def test_decorator_type_error():
+    @validate_args(type_check=int)
+    def test_func(x):
+        return x
+    try:
+        test_func(3.14)
+        assert False
+    except TypeError:
+        pass
+
+def test_decorator_min_error():
+    @validate_args(min_value=0)
+    def test_func(x):
+        return x
+    try:
+        test_func(-5)
+        assert False
+    except ValueError:
+        pass
+
+def test_decorator_max_error():
+    @validate_args(max_value=100)
+    def test_func(x):
+        return x
+    try:
+        test_func(200)
+        assert False
+    except ValueError:
+        pass
+
+
+
+тесты: pytest lab4.py -v
+cd C:\Users\HomePC\Downloads
+pytest lab4.py -v
