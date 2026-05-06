@@ -351,9 +351,9 @@ task8.py::test_ab_different PASSED                                              
 
 ## Используемые материалы
 
-1. [Itertools в Python](https://habr.com/ru/companies/otus/articles/529356/)
-2. [itertools — Functions creating iterators for efficient looping](https://docs.python.org/3/library/itertools.html)
-3. [Итерируем правильно: 20 приемов использования в Python модуля itertools](https://proglib.io/p/iteriruemsya-pravilno-20-priemov-ispolzovaniya-v-python-modulya-itertools-2020-01-03)
+1. [Рекурсия в Python](https://docs.python.org/3/library/functools.html)
+2. [pytest документация](https://docs.pytest.org/)
+
 
 ---
 
@@ -472,9 +472,9 @@ lab4.py::test_decorator_max_error PASSED                                        
 
 ## Используемые материалы
 
-1. [Itertools в Python](https://habr.com/ru/companies/otus/articles/529356/)
-2. [itertools — Functions creating iterators for efficient looping](https://docs.python.org/3/library/itertools.html)
-3. [Итерируем правильно: 20 приемов использования в Python модуля itertools](https://proglib.io/p/iteriruemsya-pravilno-20-priemov-ispolzovaniya-v-python-modulya-itertools-2020-01-03)
+1. [Замыкания в Python](https://python-scripts.com/closure-python)
+2. [Декораторы в Python](https://python-scripts.com/decorators)
+3. [pytest — документация](https://docs.pytest.org/)
 
 ---
 
