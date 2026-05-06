@@ -265,3 +265,104 @@ lab2
 Задача 3: [(123450798, 5367426), (123451718, 5367466), (123453788, 5367556), (123454708, 5367596), (123456778, 5367686)]
 
 
+lab3
+
+# Отчёт по работе №8
+
+## Вариант 8
+
+---
+
+## Задача 1: Линеаризация вложенных списков
+
+**Условие:**  
+Написать функцию для линеаризации вложенных списков.
+
+**Пример:**  
+`[1, 2, [3, 4, [5, [6]]]]` → `[1, 2, 3, 4, 5, 6]`
+
+**Решение:**
+
+Реализованы две функции:
+- **Рекурсивная** `linearize_recursive()` — обходит список и рекурсивно раскрывает вложенные списки
+- **Итеративная** `linearize_iterative()` — использует стек для обхода без рекурсии
+
+**Результат:**
+ Исходный: [1, 2, [3, 4, [5, [6]]]]
+   Рекурсивно: [1, 2, 3, 4, 5, 6]
+   Итеративно: [1, 2, 3, 4, 5, 6]
+
+   
+---
+
+## Задача 2: Расчёт aₖ и bₖ
+
+**Условие:**  
+aₖ = 2·bₖ₋₁ + aₖ₋₁  
+bₖ = 2·aₖ₋₁ + bₖ₋₁
+
+**Решение:**
+
+Реализованы две функции:
+- **Рекурсивная** `rec_ab()`
+- **Итеративная** `iter_ab()`
+
+**Результат (a₀=1, b₀=1):**
+
+| k | aₖ | bₖ |
+|---|----|----|
+| 0 | 1  | 1  |
+| 1 | 3  | 3  |
+| 2 | 9  | 9  |
+| 3 | 27 | 27 |
+| 4 | 81 | 81 |
+
+---
+
+## Тестирование (pytest)
+
+Написано 7 тестов, проверяющих:
+- линеаризацию (3 теста)
+- расчёт aₖ, bₖ (4 теста)
+
+**Результат:**
+task8.py::test_linearize PASSED                                                                                                                                                   [ 14%]
+rootdir: C:\Users\HomePC\Downloads
+collected 7 items
+
+task8.py::test_linearize PASSED                                                                                                                                                   [ 14%]
+task8.py::test_linearize_empty PASSED                                                                                                                                             [ 28%]
+task8.py::test_linearize_simple PASSED                                                                                                                                            [ 42%]
+task8.py::test_ab_k0 PASSED                                                                                                                                                       [ 57%]
+task8.py::test_ab_k1 PASSED                                                                                                                                                       [ 71%]
+task8.py::test_ab_k2 PASSED                                                                                                                                                       [ 85%]
+task8.py::test_ab_different PASSED                                                                                                                                                [100%]
+
+
+
+---
+
+## Скриншот
+
+<img width="1718" height="879" alt="Снимок экрана 2026-05-06 230825" src="https://github.com/user-attachments/assets/0493b5f5-203a-44ae-84af-5189311fed2b" />
+
+
+---
+
+## Используемые материалы
+
+1. [Itertools в Python](https://habr.com/ru/companies/otus/articles/529356/)
+2. [itertools — Functions creating iterators for efficient looping](https://docs.python.org/3/library/itertools.html)
+3. [Итерируем правильно: 20 приемов использования в Python модуля itertools](https://proglib.io/p/iteriruemsya-pravilno-20-priemov-ispolzovaniya-v-python-modulya-itertools-2020-01-03)
+
+---
+
+## Вывод
+
+Работа выполнена полностью:
+- ✅ 2 задачи реализованы (рекурсия + итерация)
+- ✅ Написаны тесты pytest
+- ✅ Все тесты пройдены
+   
+
+
