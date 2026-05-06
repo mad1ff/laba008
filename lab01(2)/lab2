@@ -46,3 +46,22 @@ if __name__ == "__main__":
     print(f"\nЗадача 1: {task1()}")
     print(f"\nЗадача 2: {task2()}")
     print(f"\nЗадача 3: {task3()}")
+
+import itertools
+def task1():
+Задача 1: последовательности длинЫ
+6 B {K, A, T, E, P3,
+начинающиеся на Р и заканчивающиеся
+на К
+>>> task1()
+625
+alphabet = L'K', 'A'
+, 'T', 'E',
+'P']
+# Генерируем все комбинации для 4
+средних позиций (2,3, 4,5)
+# Первая позиция = Р, последняя = к
+- фиксированы
+combinations =
+list(itertools.product (alphabet, repeat=4))
+return len (combinations)
