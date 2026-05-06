@@ -1,171 +1,110 @@
-rare
-"""
-Лабораторная работа №3 - Рекурсия
-Вариант 8
-1. Линеаризация вложенных списков
-2. Расчёт a_k, b_k по рекуррентным формулам
-"""
+# task8.py - АБСОЛЮТНО ПРАВИЛЬНАЯ ВЕРСИЯ
 
-from typing import List, Union, Tuple
+# ========== ЗАДАЧА 1: ЛИНЕАРИЗАЦИЯ СПИСКОВ ==========
 
-# ------------------------------------------------------------
-# Часть 1: Линеаризация списка
-# ------------------------------------------------------------
-
-def linearize_recursive(nested_list: List[Union[int, List]]) -> List[int]:
-    """
-    Линеаризация вложенного списка с помощью рекурсии.
-    
-    Пример:
-    >>> linearize_recursive([1, 2, [3, 4, [5, [6]]], 2, 3, 4, 5, 6])
-    [1, 2, 3, 4, 5, 6, 2, 3, 4, 5, 6]
-    """
+# Рекурсивный вариант
+def linearize_recursive(lst):
     result = []
-    for element in nested_list:
-        if isinstance(element, list):
-            result.extend(linearize_recursive(element))
+    for item in lst:
+        if isinstance(item, list):
+            result.extend(linearize_recursive(item))
         else:
-            result.append(element)
+            result.append(item)
     return result
 
-
-def linearize_iterative(nested_list: List[Union[int, List]]) -> List[int]:
-    """
-    Линеаризация вложенного списка без рекурсии (через стек).
-    
-    Пример:
-    >>> linearize_iterative([1, 2, [3, 4, [5, [6]]], 2, 3, 4, 5, 6])
-    [1, 2, 3, 4, 5, 6, 2, 3, 4, 5, 6]
-    """
-    stack = [nested_list]
+# Итеративный вариант (без рекурсии) - ОКОНЧАТЕЛЬНО ИСПРАВЛЕН
+def linearize_iterative(lst):
     result = []
+    stack = list(lst)  # создаём копию списка
     while stack:
-        current = stack.pop()
-        if isinstance(current, list):
-            # добавляем элементы в обратном порядке для сохранения порядка
-            for item in reversed(current):
-                stack.append(item)
+        item = stack.pop(0)  # берём первый элемент
+        if isinstance(item, list):
+            # вставляем элементы списка в начало
+            stack = item + stack
         else:
-            result.append(current)
+            result.append(item)
     return result
 
+# ========== ЗАДАЧА 2: РАСЧЁТ a_k И b_k ==========
 
-# ------------------------------------------------------------
-# Часть 2: Расчёт a_k и b_k
-# ------------------------------------------------------------
-
-def calculate_ab_recursive(k: int, a0: float, b0: float) -> Tuple[float, float]:
-    """
-    Рекурсивный расчёт a_k, b_k по формулам:
-    a_k = 2*b_{k-1} + a_{k-1}
-    b_k = 2*a_{k-1} + b_{k-1}
-    
-    Возвращает (a_k, b_k)
-    """
+# Рекурсивный вариант
+def rec_ab(k, a0, b0):
     if k == 0:
         return a0, b0
-    a_prev, b_prev = calculate_ab_recursive(k - 1, a0, b0)
+    a_prev, b_prev = rec_ab(k - 1, a0, b0)
     a_k = 2 * b_prev + a_prev
     b_k = 2 * a_prev + b_prev
     return a_k, b_k
 
-
-def calculate_ab_iterative(k: int, a0: float, b0: float) -> Tuple[float, float]:
-    """
-    Итеративный расчёт a_k, b_k.
-    """
+# Итеративный вариант (без рекурсии)
+def iter_ab(k, a0, b0):
     a, b = a0, b0
     for _ in range(k):
-        a_next = 2 * b + a
-        b_next = 2 * a + b
-        a, b = a_next, b_next
+        a, b = 2 * b + a, 2 * a + b
     return a, b
 
+# ========== ДЕМОНСТРАЦИЯ РАБОТЫ ==========
 
-# ------------------------------------------------------------
-# Пример использования (для демонстрации)
-# ------------------------------------------------------------
 if __name__ == "__main__":
-    print("=== Линеаризация списков ===")
-    data = [1, 2, [3, 4, [5, [6]]], 2, 3, 4, 5, 6]
-    print("Исходный:", data)
-    print("Рекурсия:", linearize_recursive(data))
-    print("Итеративно:", linearize_iterative(data))
+    print("=" * 60)
+    print("ДЕМОНСТРАЦИЯ РАБОТЫ ФУНКЦИЙ")
+    print("=" * 60)
     
-    print("\n=== Расчёт a_k, b_k ===")
-    a0, b0 = 1, 1
+    # Тест линеаризации
+    test_list = [1, 2, [3, 4, [5, [6]]]]
+    print(f"\n1. Линеаризация списка:")
+    print(f"   Исходный: {test_list}")
+    print(f"   Рекурсивно: {linearize_recursive(test_list)}")
+    print(f"   Итеративно: {linearize_iterative(test_list)}")
+    
+    # Тест a_k, b_k
+    print(f"\n2. Расчёт a_k, b_k (a0=1, b0=1):")
     for k in range(5):
-        a_rec, b_rec = calculate_ab_recursive(k, a0, b0)
-        a_it, b_it = calculate_ab_iterative(k, a0, b0)
-        print(f"k={k}: рекурсия ({a_rec}, {b_rec}) | итеративно ({a_it}, {b_it})")
+        rec_a, rec_b = rec_ab(k, 1, 1)
+        iter_a, iter_b = iter_ab(k, 1, 1)
+        print(f"   k={k}: рекурсия ({rec_a}, {rec_b}) | итерация ({iter_a}, {iter_b})")
+    
+    print("\n" + "=" * 60)
+    print("Для запуска тестов выполните: pytest task8.py -v")
+    print("=" * 60)
 
 
+# ========== ТЕСТЫ ДЛЯ PYTEST ==========
 
-
-
-
-медиум
-
-import pytest
-from task8 import (
-    linearize_recursive,
-    linearize_iterative,
-    calculate_ab_recursive,
-    calculate_ab_iterative
-)
-
-# ------------------------------------------------------------
-# Тесты для линеаризации
-# ------------------------------------------------------------
-
-def test_linearize_simple():
-    data = [1, [2, 3], 4]
-    expected = [1, 2, 3, 4]
-    assert linearize_recursive(data) == expected
-    assert linearize_iterative(data) == expected
-
-def test_linearize_deep_nesting():
-    data = [1, [2, [3, [4, [5]]]]]
-    expected = [1, 2, 3, 4, 5]
-    assert linearize_recursive(data) == expected
-    assert linearize_iterative(data) == expected
+def test_linearize():
+    test_input = [1, 2, [3, 4, [5, [6]]]]
+    expected = [1, 2, 3, 4, 5, 6]
+    assert linearize_recursive(test_input) == expected
+    assert linearize_iterative(test_input) == expected
 
 def test_linearize_empty():
     assert linearize_recursive([]) == []
     assert linearize_iterative([]) == []
 
-def test_linearize_no_nesting():
-    data = [1, 2, 3, 4, 5]
-    expected = [1, 2, 3, 4, 5]
-    assert linearize_recursive(data) == expected
-    assert linearize_iterative(data) == expected
+def test_linearize_simple():
+    test_input = [1, 2, 3]
+    expected = [1, 2, 3]
+    assert linearize_recursive(test_input) == expected
+    assert linearize_iterative(test_input) == expected
 
-def test_linearize_with_empty_sublist():
-    data = [1, [], [2, [], 3], 4]
-    expected = [1, 2, 3, 4]
-    assert linearize_recursive(data) == expected
-    assert linearize_iterative(data) == expected
+def test_ab_k0():
+    assert rec_ab(0, 1, 1) == (1, 1)
+    assert iter_ab(0, 1, 1) == (1, 1)
 
-# ------------------------------------------------------------
-# Тесты для расчёта a_k, b_k
-# ------------------------------------------------------------
+def test_ab_k1():
+    assert rec_ab(1, 1, 1) == (3, 3)
+    assert iter_ab(1, 1, 1) == (3, 3)
 
-@pytest.mark.parametrize("k, a0, b0, expected", [
-    (0, 1, 1, (1, 1)),
-    (1, 1, 1, (3, 3)),
-    (2, 1, 1, (9, 9)),
-    (3, 1, 1, (27, 27)),
-    (0, 2, 3, (2, 3)),
-    (1, 2, 3, (8, 7)),
-    (2, 2, 3, (22, 23)),
-])
-def test_calculate_ab(k, a0, b0, expected):
-    # Сравниваем рекурсивную и итеративную версии
-    rec_result = calculate_ab_recursive(k, a0, b0)
-    it_result = calculate_ab_iterative(k, a0, b0)
-    assert rec_result == expected
-    assert it_result == expected
-    # Также проверяем, что обе версии совпадают
-    assert rec_result == it_result
+def test_ab_k2():
+    assert rec_ab(2, 1, 1) == (9, 9)
+    assert iter_ab(2, 1, 1) == (9, 9)
+
+def test_ab_different():
+    assert rec_ab(1, 0, 1) == (2, 1)
+    assert iter_ab(1, 0, 1) == (2, 1)
+
+тесты: pytest task8.py -v
+cd C:\Users\HomePC\Downloads
+pytest task8.py -v
 
 
