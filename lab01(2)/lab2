@@ -35,10 +35,10 @@ def task3():
     Задача 3: числа до 10^9 по маске 12345??8, делящиеся на 23
     """
     results = []
-    for x in range(0, 10**9, 23):
+    for x in range (0, 10**9, 23):
         if fnmatch(str(x), '12345?7?8'):
-            results.append((x, x // 23))
-        if len(results) == 5:
+            results.append ((x, x // 23))
+        if len(results) ==5:
             break
     return results
 
@@ -52,6 +52,4 @@ if __name__ == "__main__":
     
     print(f"\nЗадача 1: {task1()}")
     print(f"\nЗадача 2: {task2()}")
-    print("\nЗадача 3 (первые 5 чисел):")
-    for num, div in task3():
-        print(f"  {num} : {div}")
+    print(f"\nЗадача 3: {task3()}")
