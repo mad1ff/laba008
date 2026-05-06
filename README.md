@@ -242,8 +242,8 @@ lab2
 
 ## Скриншоты
 
-(<img width="1103" height="195" alt="Снимок экрана 2026-05-06 220439" src="https://github.com/user-attachments/assets/0be73f08-29a7-4942-8470-1636ebb7c837" />
-)
+<img width="1103" height="195" alt="Снимок экрана 2026-05-06 220439" src="https://github.com/user-attachments/assets/0be73f08-29a7-4942-8470-1636ebb7c837" />
+
 
 ---
 
