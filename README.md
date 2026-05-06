@@ -460,11 +460,13 @@ lab4.py::test_decorator_max_error PASSED                                        
 
 ### Скриншот 1: Демонстрация работы замыкания и декоратора
 
-<img width="800" alt="Снимок экрана демонстрации работы lab4" src="screenshot_lab4_demo.png" />
+<img width="1339" height="758" alt="Снимок экрана 2026-05-07 000537" src="https://github.com/user-attachments/assets/8f8c68cd-cec5-4bfe-990b-c0ce2a6a3edf" />
+
 
 ### Скриншот 2: Результат выполнения pytest
 
-<img width="800" alt="Снимок экрана тестов lab4" src="screenshot_lab4_tests.png" />
+<img width="1759" height="396" alt="Снимок экрана 2026-05-07 000558" src="https://github.com/user-attachments/assets/a1333b0c-e5e5-41f2-8e01-120f37ca910d" />
+
 
 ---
 
