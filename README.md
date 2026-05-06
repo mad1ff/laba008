@@ -1,4 +1,3 @@
-<img width="1103" height="195" alt="Снимок экрана 2026-05-06 220439" src="https://github.com/user-attachments/assets/b595c13b-f0ad-466e-8fd6-95d61b068981" />
 # ОТЧЁТ ПО ЛАБОРАТОРНОЙ РАБОТЕ
 
 ## ЗАДАНИЕ 00_distance.py
@@ -243,7 +242,7 @@ lab2
 
 ## Скриншоты
 
-![Результат работы программы](<img width="1103" height="195" alt="Снимок экрана 2026-05-06 220439" src="https://github.com/user-attachments/assets/0be73f08-29a7-4942-8470-1636ebb7c837" />
+(<img width="1103" height="195" alt="Снимок экрана 2026-05-06 220439" src="https://github.com/user-attachments/assets/0be73f08-29a7-4942-8470-1636ebb7c837" />
 )
 
 ---
