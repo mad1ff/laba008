@@ -106,5 +106,7 @@ def test_ab_different():
 тесты: pytest task8.py -v
 cd C:\Users\HomePC\Downloads
 pytest task8.py -v
+cd ~/Рабочий\ стол/Gadirov/python_labs-main/
+
 
 
