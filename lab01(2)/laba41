@@ -1,0 +1,252 @@
+# lab4.py
+# Лабораторная работа №4
+# Вариант 8: Замыкание для среднего арифметического + декоратор проверки типов и диапазона
+
+# ============================================================
+# ЧАСТЬ 1: ЗАМЫКАНИЕ (Rare)
+# ============================================================
+
+def make_average():
+    """
+    Замыкание для вычисления среднего арифметического всех переданных аргументов.
+    """
+    numbers = []
+    
+    def average(value=None):
+        if value is not None:
+            numbers.append(value)
+        
+        if not numbers:
+            return 0
+        
+        return sum(numbers) / len(numbers)
+    
+    return average
+
+
+# ============================================================
+# ЧАСТЬ 2: ДЕКОРАТОРЫ (Medium + Новый декоратор)
+# ============================================================
+
+def log_args(func):
+    """
+    Декоратор для вывода всех аргументов функции в консоль.
+    Выводит позиционные (*args) и именованные (**kwargs) аргументы.
+    """
+    def wrapper(*args, **kwargs):
+        print(f"\n[LOG] Вызов функции: {func.__name__}")
+        
+        # Вывод позиционных аргументов
+        if args:
+            print(f"  Позиционные аргументы (*args): {args}")
+        else:
+            print(f"  Позиционные аргументы (*args): отсутствуют")
+        
+        # Вывод именованных аргументов
+        if kwargs:
+            print(f"  Именованные аргументы (**kwargs): {kwargs}")
+        else:
+            print(f"  Именованные аргументы (**kwargs): отсутствуют")
+        
+        # Вызов оригинальной функции
+        result = func(*args, **kwargs)
+        print(f"  Результат: {result}")
+        
+        return result
+    
+    return wrapper
+
+
+def validate_args(type_check=None, min_value=None, max_value=None):
+    """
+    Декоратор для проверки аргументов функции на тип и диапазон значений.
+    """
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            # Проверяем позиционные аргументы
+            for i, arg in enumerate(args):
+                if type_check is not None and not isinstance(arg, type_check):
+                    raise TypeError(f"Аргумент {i} должен быть типа {type_check.__name__}, получен {type(arg).__name__}")
+                
+                if min_value is not None and arg < min_value:
+                    raise ValueError(f"Аргумент {i} = {arg} меньше минимального значения {min_value}")
+                
+                if max_value is not None and arg > max_value:
+                    raise ValueError(f"Аргумент {i} = {arg} больше максимального значения {max_value}")
+            
+            # Проверяем именованные аргументы
+            for key, arg in kwargs.items():
+                if type_check is not None and not isinstance(arg, type_check):
+                    raise TypeError(f"Аргумент {key} должен быть типа {type_check.__name__}, получен {type(arg).__name__}")
+                
+                if min_value is not None and arg < min_value:
+                    raise ValueError(f"Аргумент {key} = {arg} меньше минимального значения {min_value}")
+                
+                if max_value is not None and arg > max_value:
+                    raise ValueError(f"Аргумент {key} = {arg} больше максимального значения {max_value}")
+            
+            return func(*args, **kwargs)
+        
+        return wrapper
+    return decorator
+
+
+# ============================================================
+# ПРИМЕР ИСПОЛЬЗОВАНИЯ
+# ============================================================
+
+# Вешаем оба декоратора: сначала validate_args (проверка), потом log_args (логирование)
+# Важен порядок: сначала применяется нижний декоратор (log_args), потом верхний (validate_args)
+@log_args
+@validate_args(type_check=(int, float), min_value=-100, max_value=100)
+def safe_add(a, b):
+    """Функция с проверкой аргументов и логированием"""
+    return a + b
+
+@validate_args(type_check=int, min_value=0, max_value=10)
+def safe_multiply(a, b):
+    return a * b
+
+
+# ============================================================
+# ДЕМОНСТРАЦИЯ РАБОТЫ
+# ============================================================
+
+if __name__ == "__main__":
+    print("=" * 60)
+    print("ЛАБОРАТОРНАЯ РАБОТА №4 (Вариант 8)")
+    print("=" * 60)
+    
+    # ЧАСТЬ 1: Замыкание
+    print("\n【 ЧАСТЬ 1: ЗАМЫКАНИЕ ДЛЯ СРЕДНЕГО АРИФМЕТИЧЕСКОГО 】")
+    
+    avg = make_average()
+    numbers_to_test = [10, 20, 30, 40, 50]
+    print(f"\nДобавляем числа: {numbers_to_test}")
+    
+    for num in numbers_to_test:
+        current_avg = avg(num)
+        print(f"   Добавлено {num}, текущее среднее: {current_avg}")
+    
+    print(f"\nФинальное среднее: {avg()}")
+    print(f"Проверка: (10+20+30+40+50)/5 = {sum(numbers_to_test)/len(numbers_to_test)}")
+    
+    # ЧАСТЬ 2: Декораторы
+    print("\n" + "=" * 60)
+    print("【 ЧАСТЬ 2: ДЕКОРАТОРЫ 】")
+    
+    print("\n" + "-" * 40)
+    print("Демонстрация декоратора log_args на safe_add")
+    print("-" * 40)
+    
+    # 1. Вызов только с позиционными аргументами (*args)
+    print("\n>>> Вызов 1: только позиционные аргументы (args)")
+    result1 = safe_add(50, 30)
+    print(f"   Итоговый результат: {result1}\n")
+    
+    # 2. Вызов только с именованными аргументами (**kwargs)
+    print("\n>>> Вызов 2: только именованные аргументы (kwargs)")
+    result2 = safe_add(a=25, b=75)
+    print(f"   Итоговый результат: {result2}\n")
+    
+    # 3. Вызов со смешанными аргументами (args + kwargs)
+    print("\n>>> Вызов 3: позиционные + именованные аргументы (args + kwargs)")
+    result3 = safe_add(15, b=35, a=20)  # a переопределяется через kwargs
+    print(f"   Итоговый результат: {result3}\n")
+    
+    # Дополнительный тест: больше двух аргументов
+    print("-" * 40)
+    print("Дополнительная демонстрация на функции с переменным числом аргументов")
+    print("-" * 40)
+    
+    @log_args
+    def demo_args_kwargs(*args, **kwargs):
+        """Демонстрационная функция, принимающая любые аргументы"""
+        print(f"  [ВНУТРИ ФУНКЦИИ] args = {args}, kwargs = {kwargs}")
+        return len(args) + len(kwargs)
+    
+    print("\n>>> Тест: только *args")
+    demo_args_kwargs(1, 2, 3, 4, 5)
+    
+    print("\n>>> Тест: только **kwargs")
+    demo_args_kwargs(x=10, y=20, z=30)
+    
+    print("\n>>> Тест: *args и **kwargs вместе")
+    demo_args_kwargs(100, 200, name="Python", version=3.9)
+    
+    print("\n" + "=" * 60)
+    print("Для запуска тестов выполните: pytest lab4.py -v")
+    print("=" * 60)
+
+
+# ============================================================
+# ТЕСТЫ ДЛЯ PYTEST
+# ============================================================
+
+def test_average_closure():
+    avg = make_average()
+    assert avg(10) == 10.0
+    assert avg(20) == 15.0
+    assert avg(30) == 20.0
+    assert avg() == 20.0
+
+def test_average_empty():
+    avg = make_average()
+    assert avg() == 0
+
+def test_average_single():
+    avg = make_average()
+    assert avg(42) == 42.0
+    assert avg() == 42.0
+
+def test_decorator_success():
+    @validate_args(type_check=int, min_value=0, max_value=100)
+    def test_func(x):
+        return x * 2
+    assert test_func(50) == 100
+    assert test_func(0) == 0
+    assert test_func(100) == 200
+
+def test_decorator_type_error():
+    @validate_args(type_check=int)
+    def test_func(x):
+        return x
+    try:
+        test_func(3.14)
+        assert False
+    except TypeError:
+        pass
+
+def test_decorator_min_error():
+    @validate_args(min_value=0)
+    def test_func(x):
+        return x
+    try:
+        test_func(-5)
+        assert False
+    except ValueError:
+        pass
+
+def test_decorator_max_error():
+    @validate_args(max_value=100)
+    def test_func(x):
+        return x
+    try:
+        test_func(200)
+        assert False
+    except ValueError:
+        pass
+
+def test_log_args_decorator_output(capsys):
+    """Тест для проверки вывода декоратора log_args"""
+    @log_args
+    def test_func(a, b, c=10):
+        return a + b + c
+    
+    result = test_func(5, b=7, c=3)
+    captured = capsys.readouterr()
+    
+    assert "Вызов функции: test_func" in captured.out
+    assert "Позиционные аргументы (*args): (5,)" in captured.out
+    assert "Именованные аргументы (**kwargs): {'b': 7, 'c': 3}" in captured.out
+    assert result == 15
