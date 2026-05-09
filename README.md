@@ -602,12 +602,17 @@ laba5.py::test_different_threshold PASSED
 
 
 Используемые материалы
-Python Generators — официальная документация
+Генераторы в Python
+docs.python.org/3/tutorial/classes.html#generators
 
 pytest — документация
+docs.pytest.org
 
 map, filter, reduce в Python
+docs.python.org/3/library/functions.html
 
+Итерируем правильно: генераторы и итераторы
+realpython.com/introduction-to-python-generators
 Вывод
 В ходе выполнения лабораторной работы:
 
