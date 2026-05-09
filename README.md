@@ -601,18 +601,17 @@ laba5.py::test_different_threshold PASSED
 <img width="1481" height="695" alt="Снимок экрана 2026-05-09 234141" src="https://github.com/user-attachments/assets/35be1272-a281-455a-9abc-c3c85424469b" />
 
 
-Используемые материалы
-Генераторы в Python
-docs.python.org/3/tutorial/classes.html#generators
+## Используемые материалы
 
-pytest — документация
-docs.pytest.org
+1. [Генераторы в Python](https://docs.python.org/3/tutorial/classes.html#generators)
 
-map, filter, reduce в Python
-docs.python.org/3/library/functions.html
+2. [pytest документация](https://docs.pytest.org/)
 
-Итерируем правильно: генераторы и итераторы
-realpython.com/introduction-to-python-generators
+3. [map, filter, reduce в Python](https://docs.python.org/3/library/functions.html)
+
+4. [Itertools в Python](https://docs.python.org/3/library/itertools.html)
+
+
 Вывод
 В ходе выполнения лабораторной работы:
 
