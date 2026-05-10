@@ -576,8 +576,7 @@ text
   Результат: hellohellohellohello (было изменено значительно)
 
 
-Результаты тестирования pytest:<img width="857" height="547" alt="Снимок экрана 2026-05-09 234119" src="https://github.com/user-attachments/assets/37f5cab6-5a0e-4560-a6c3-3903e539173a" />
-
+Результаты тестирования pytest:
 
 text
 collected 8 items
