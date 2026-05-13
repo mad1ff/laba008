@@ -1,14 +1,9 @@
 import re
 import fnmatch
 
-# ============================================================
-# Класс для задачи 1: комбинаторика
-# ============================================================
+
+# ЗАДАЧА 1: КОМБИНАТОРИКА
 class CombinatoricsCounter:
-    """
-    Класс для подсчёта количества последовательностей с фиксированными
-    первым и последним символами.
-    """
     def __init__(self, alphabet, length, first_char, last_char):
         self.alphabet = alphabet
         self.length = length
@@ -16,30 +11,21 @@ class CombinatoricsCounter:
         self.last_char = last_char
 
     def count_sequences(self):
-        """Возвращает количество возможных последовательностей."""
         if self.length < 2:
             return 0
-        free_positions = self.length - 2
-        return len(self.alphabet) ** free_positions
+        return len(self.alphabet) ** (self.length - 2)
 
 
-# ============================================================
-# Класс для задачи 2: системы счисления
-# ============================================================
+# ЗАДАЧА 2: СИСТЕМЫ СЧИСЛЕНИЯ
 class BaseConverter:
-    """
-    Класс для подсчёта различных цифр в записи числа в системе счисления.
-    """
     def __init__(self, expression, base):
         self.expression = expression
         self.base = base
 
     def evaluate(self):
-        """Вычисляет значение арифметического выражения."""
         return eval(self.expression)
 
     def count_unique_digits(self):
-        """Возвращает количество различных цифр в записи числа в системе base."""
         value = self.evaluate()
         if value == 0:
             return 1
@@ -51,32 +37,19 @@ class BaseConverter:
         return len(digits)
 
 
-# ============================================================
-# Класс для задачи 3: поиск по маске и делимости
-# ============================================================
+# ЗАДАЧА 3: ПОИСК ПО МАСКЕ И ДЕЛИМОСТИ
 class MaskDivisibleFinder:
-    """
-    Класс для поиска чисел, соответствующих маске и делящихся на заданное число.
-    """
     def __init__(self, mask, divisor, max_value):
         self.mask = mask
         self.divisor = divisor
         self.max_value = max_value
-        # Преобразуем маску fnmatch в регулярное выражение
         self.regex = fnmatch.translate(mask)
         self.pattern = re.compile(self.regex)
 
     def matches_mask(self, num_str):
-        """Проверяет, соответствует ли строка числа маске."""
         return bool(self.pattern.fullmatch(num_str))
 
     def find_numbers(self):
-        """
-        Находит все числа от 1 до max_value, которые:
-        1) соответствуют маске
-        2) делятся на divisor
-        Возвращает список кортежей (число, число // divisor).
-        """
         results = []
         for num in range(self.divisor, self.max_value + 1, self.divisor):
             if self.matches_mask(str(num)):
@@ -84,39 +57,22 @@ class MaskDivisibleFinder:
         return results
 
 
-# ============================================================
-# Демонстрация работы для варианта 8
-# ============================================================
+# ЗАПУСК И ВЫВОД РЕЗУЛЬТАТОВ
 if __name__ == "__main__":
-    print("=" * 60)
-    print("ВАРИАНТ 8 — УРОВЕНЬ WELL DONE (классы)")
-    print("=" * 60)
+    import doctest
+    doctest.testmod()
 
-    # Задача 1
-    print("\n【Задача 1】")
-    alphabet = ['К', 'А', 'Т', 'Е', 'Р']
-    task1 = CombinatoricsCounter(alphabet, 6, 'Р', 'К')
-    result1 = task1.count_sequences()
-    print(f"  Алфавит: {alphabet}")
-    print(f"  Длина: 6, первый символ: Р, последний: К")
-    print(f"  Результат: {result1}")
+    # ЗАДАЧА 1
+    task1 = CombinatoricsCounter(['K', 'A', 'T', 'E', 'P'], 6, 'P', 'K')
+    print(f"Задача 1: {task1.count_sequences()}")
 
-    # Задача 2
-    print("\n【Задача 2】")
-    expression = "216**6 + 216**4 + 36**6 - 6**14 - 24"
-    task2 = BaseConverter(expression, 6)
-    result2 = task2.count_unique_digits()
-    print(f"  Выражение: {expression}")
-    print(f"  Значение: {task2.evaluate()}")
-    print(f"  Результат: {result2} различных цифр в шестеричной записи")
+    # ЗАДАЧА 2
+    task2 = BaseConverter("216**6 + 216**4 + 36**6 - 6**14 - 24", 6)
+    print(f"Задача 2: {task2.count_unique_digits()}")
 
-    # Задача 3
-    print("\n【Задача 3】")
+    # ЗАДАЧА 3
     task3 = MaskDivisibleFinder("12345??8", 23, 10**9)
-    result3 = task3.find_numbers()
-    print(f"  Маска: 12345??8")
-    print(f"  Делитель: 23")
-    print(f"  Найдено чисел: {len(result3)}")
-    print("  Результаты (число → частное от деления на 23):")
-    for num, quot in result3:
-        print(f"    {num} → {quot}")
+    results = task3.find_numbers()
+    print(f"Задача 3: найдено {len(results)} чисел")
+    for num, quot in results:
+        print(f"  {num} -> {quot}")
