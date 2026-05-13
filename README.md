@@ -849,3 +849,91 @@ Medium:
 Файлы Excel и Word успешно создаются
 
 Данные успешно сохраняются в PostgreSQL
+
+
+
+
+
+
+
+Отчёт по работе №6
+Вариант 8
+Тема: Геометрические фигуры
+Условие задачи
+Разработать приложение с графическим интерфейсом для расчёта площади и периметра:
+
+Прямоугольник
+
+Треугольник
+
+Трапеция
+
+Решение
+1. Класс Rectangle (Прямоугольник)
+python
+class Rectangle:
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+    
+    def area(self):
+        return self.a * self.b
+    
+    def perimeter(self):
+        return 2 * (self.a + self.b)
+2. Класс Triangle (Треугольник)
+python
+class Triangle:
+    def __init__(self, a, b, c):
+        self.a, self.b, self.c = a, b, c
+    
+    def area(self):
+        s = (self.a + self.b + self.c) / 2
+        return (s * (s - self.a) * (s - self.b) * (s - self.c)) ** 0.5
+    
+    def perimeter(self):
+        return self.a + self.b + self.c
+3. Класс Trapezoid (Трапеция)
+python
+class Trapezoid:
+    def __init__(self, a, b, h):
+        self.a, self.b, self.h = a, b, h
+    
+    def area(self):
+        return (self.a + self.b) / 2 * self.h
+    
+    def perimeter(self):
+        return self.a + self.b + 2 * self.h
+4. Графический интерфейс (Tkinter)
+Реализовано окно с:
+
+Выбором фигуры через Radiobutton
+
+Динамическими полями ввода
+
+Кнопкой "РАССЧИТАТЬ"
+
+Выводом результата (площадь + периметр)
+
+Результат работы программы
+Пример расчёта для прямоугольника:
+Параметр	Значение
+Сторона a	5
+Сторона b	8
+Площадь	40.00
+Периметр	26.00
+Скриншот
+![Результат работы программы](Снимок экрана 2026-05-13 052527.png)
+
+Используемые материалы
+Tkinter — GUI для Python
+
+Вывод
+Работа выполнена полностью:
+
+✅ 3 класса фигур (Rectangle, Triangle, Trapezoid)
+✅ GUI на Tkinter с динамическими полями
+✅ Расчёт площади и периметра
+✅ Обработка ошибок ввода
+
+
