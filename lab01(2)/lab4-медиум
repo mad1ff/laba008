@@ -1,1 +1,85 @@
+from functools import wraps
 
+# 1. Декоратор с опциональным параметром (с поддержкой рекурсии)
+def type_and_range_check(expected_type, min_val=None, max_val=None):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            # Проверяем все позиционные аргументы
+            for arg in args:
+                if not isinstance(arg, expected_type):
+                    raise TypeError(
+                        f"Аргумент {arg} имеет тип {type(arg).__name__}, "
+                        f"ожидался {expected_type.__name__}"
+                    )
+                if min_val is not None and arg < min_val:
+                    raise ValueError(
+                        f"Аргумент {arg} меньше минимального {min_val}"
+                    )
+                if max_val is None and arg > max_val:  # опечатка в строке, см. исправление ниже
+                    raise ValueError(
+                        f"Аргумент {arg} больше максимального {max_val}"
+                    )
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+# ИСПРАВЛЕННЫЙ вариант (правильная проверка max_val):
+def type_and_range_check_fixed(expected_type, min_val=None, max_val=None):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            for arg in args:
+                if not isinstance(arg, expected_type):
+                    raise TypeError(f"Ожидался {expected_type.__name__}, получен {type(arg).__name__}")
+                if min_val is not None and arg < min_val:
+                    raise ValueError(f"Значение {arg} < {min_val}")
+                if max_val is not None and arg > max_val:
+                    raise ValueError(f"Значение {arg} > {max_val}")
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+
+# 2. Замыкание — среднее аргументов
+def make_averager():
+    numbers = []
+
+    @type_and_range_check_fixed((int, float), min_val=-1000, max_val=1000)
+    def averager(new_value):
+        numbers.append(new_value)
+        return sum(numbers) / len(numbers)
+
+    return averager
+
+
+# 3. Проверка работы (включая рекурсивную функцию)
+@type_and_range_check_fixed(int, min_val=0, max_val=10)
+def recursive_sum(n):
+    """Рекурсивная сумма от 0 до n (только для демонстрации поддержки рекурсии)"""
+    if n == 0:
+        return 0
+    return n + recursive_sum(n - 1)
+
+
+# Демонстрация
+if __name__ == "__main__":
+    # Замыкание-калькулятор среднего
+    avg = make_averager()
+
+    print("=== Проверка замыкания с декоратором ===")
+    for val in [10, 20, 30, 40]:
+        print(f"Добавлено {val}, среднее: {avg(val)}")
+
+    print("\n=== Проверка рекурсивной функции с декоратором ===")
+    print(f"recursive_sum(5) = {recursive_sum(5)}")
+
+    try:
+        print(avg(2000))  # вызовет ValueError
+    except ValueError as e:
+        print(f"\nОшибка (диапазон): {e}")
+
+    try:
+        print(avg("abc"))  # вызовет TypeError
+    except TypeError as e:
+        print(f"Ошибка (тип): {e}")
