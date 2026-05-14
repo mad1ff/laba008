@@ -1,34 +1,154 @@
-from functools import wraps
+# laba4.py
+# Вариант 8: Замыкание для поиска среднего в аргументах
+# + декоратор для проверки аргументов функции на тип и диапазон значений (Medium)
 
-def type_and_range_check_fixed(expected_type, min_val=None, max_val=None):
-    def decorator(func):
+from functools import wraps
+from typing import Union, Optional, Callable, Any
+
+# ========== ЧАСТЬ 1: ЗАМЫКАНИЕ ==========
+def make_average():
+    """
+    Замыкание для вычисления среднего арифметического всех переданных чисел.
+    При каждом вызове добавляет новое число и возвращает текущее среднее.
+    """
+    numbers = []
+
+    def average(value: Union[int, float]) -> float:
+        numbers.append(value)
+        return sum(numbers) / len(numbers)
+
+    return average
+
+
+# ========== ЧАСТЬ 2: ДЕКОРАТОР С ОПЦИОНАЛЬНЫМИ ПАРАМЕТРАМИ ==========
+def validate(
+    arg_types: Optional[tuple] = None,
+    ranges: Optional[dict] = None,
+    recursive: bool = False
+):
+    """
+    Декоратор для проверки аргументов функции на тип и диапазон значений.
+    
+    Args:
+        arg_types: кортеж ожидаемых типов (напр. (int, float))
+        ranges: словарь вида {0: (min_val, max_val)} для проверки диапазона по индексу аргумента
+        recursive: флаг поддержки рекурсивных функций (выключает проверку для рекурсивных вызовов)
+    
+    Returns:
+        декорированная функция
+    """
+    def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args, **kwargs):
-            for arg in args:
-                # Проверка типа
-                if not isinstance(arg, expected_type):
-                    # Получаем имя типа для сообщения об ошибке
-                    if isinstance(expected_type, tuple):
-                        # Если expected_type - кортеж, перечисляем все допустимые типы
-                        type_names = ', '.join(t.__name__ for t in expected_type)
-                        expected_msg = f"один из ({type_names})"
-                    else:
-                        # Если один тип - просто его имя
-                        expected_msg = expected_type.__name__
-                    
-                    raise TypeError(
-                        f"Ожидался {expected_msg}, получен {type(arg).__name__}"
-                    )
-                
-                # Проверка на минимальное значение
-                if min_val is not None and arg < min_val:
-                    raise ValueError(f"Значение {arg} < {min_val}")
-                
-                # Проверка на максимальное значение
-                if max_val is not None and arg > max_val:
-                    raise ValueError(f"Значение {arg} > {max_val}")
-            
-            return func(*args, **kwargs)
-        
+            # Для рекурсивных функций — проверяем только первый вызов
+            if recursive and hasattr(wrapper, '_recursing') and wrapper._recursing:
+                return func(*args, **kwargs)
+
+            # Проверка типов
+            if arg_types is not None:
+                for i, arg in enumerate(args):
+                    if not isinstance(arg, arg_types):
+                        raise TypeError(
+                            f"Аргумент {i} должен быть типа {arg_types}, "
+                            f"получен {type(arg).__name__}"
+                        )
+
+            # Проверка диапазонов
+            if ranges is not None:
+                for idx, (low, high) in ranges.items():
+                    if idx >= len(args):
+                        continue
+                    val = args[idx]
+                    if not (low <= val <= high):
+                        raise ValueError(
+                            f"Аргумент {idx} (значение {val}) "
+                            f"должен быть в диапазоне [{low}, {high}]"
+                        )
+
+            # Обработка рекурсии
+            if recursive:
+                wrapper._recursing = True
+                result = func(*args, **kwargs)
+                wrapper._recursing = False
+                return result
+            else:
+                return func(*args, **kwargs)
+
         return wrapper
     return decorator
+
+
+# ========== ДЕМОНСТРАЦИЯ ==========
+if __name__ == "__main__":
+    print("=" * 50)
+    print("ЗАМЫКАНИЕ: калькулятор среднего арифметического")
+    print("=" * 50)
+
+    avg = make_average()
+    print(f"avg(10) -> {avg(10)}")      # 10.0
+    print(f"avg(20) -> {avg(20)}")      # 15.0
+    print(f"avg(30) -> {avg(30)}")      # 20.0
+    print(f"avg(40) -> {avg(40)}")      # 25.0
+
+    print("\n" + "=" * 50)
+    print("ДЕКОРАТОР: проверка типов и диапазонов")
+    print("=" * 50)
+
+    # Пример 1: только проверка типа (должны быть числа)
+    @validate(arg_types=(int, float))
+    def add(a, b):
+        return a + b
+
+    print("add(5, 3) ->", add(5, 3))
+    print("add(2.5, 1.5) ->", add(2.5, 1.5))
+    # add("5", 3)  # TypeError
+
+    print("\n--- Проверка диапазона ---")
+
+    # Пример 2: проверка диапазона для аргументов 0 и 1
+    @validate(ranges={0: (0, 100), 1: (0, 100)})
+    def set_score(points, max_points):
+        return f"Очки: {points}/{max_points}"
+
+    print(set_score(85, 100))
+    # set_score(150, 100)  # ValueError
+
+    print("\n--- Комбинированная проверка ---")
+
+    # Пример 3: тип + диапазон
+    @validate(arg_types=(int,), ranges={0: (1, 10)})
+    def multiply_by_two(x):
+        return x * 2
+
+    for val in [1, 5, 10]:
+        print(f"multiply_by_two({val}) -> {multiply_by_two(val)}")
+    # multiply_by_two(11)  # ValueError
+
+    print("\n" + "=" * 50)
+    print("РЕКУРСИВНАЯ ФУНКЦИЯ С ДЕКОРАТОРОМ")
+    print("=" * 50)
+
+    # Пример 4: рекурсивная функция с поддержкой рекурсии
+    @validate(arg_types=(int,), ranges={0: (0, 20)}, recursive=True)
+    def factorial(n):
+        if n <= 1:
+            return 1
+        return n * factorial(n - 1)
+
+    print(f"factorial(5) -> {factorial(5)}")
+    print(f"factorial(10) -> {factorial(10)}")
+    # factorial(25)  # ValueError (выход за диапазон)
+
+    print("\n" + "=" * 50)
+    print("ПРОВЕРКА ОШИБОК")
+    print("=" * 50)
+
+    try:
+        add("текст", 5)
+    except TypeError as e:
+        print(f"Ошибка типа: {e}")
+
+    try:
+        set_score(150, 100)
+    except ValueError as e:
+        print(f"Ошибка диапазона: {e}")
