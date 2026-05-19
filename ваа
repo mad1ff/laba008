@@ -1,0 +1,31 @@
+from news_app import NewsApp
+
+# ===== ДЕМОНСТРАЦИЯ ПОЛИМОРФИЗМА str(e) =====
+# Два класса с разным __str__
+
+class NetworkError(Exception):
+    def __str__(self):
+        return "❌ НЕТ ИНТЕРНЕТА! Проверьте соединение."
+
+class ParsingError(Exception):
+    def __str__(self):
+        return "⚠️ ОШИБКА ПАРСИНГА! Неверный формат RSS."
+
+# Показываем полиморфизм
+print("\n" + "="*60)
+print("🔥 ПОЛИМОРФИЗМ: str(e) делает разные вещи")
+print("="*60)
+
+err1 = NetworkError()
+err2 = ParsingError()
+
+print(f"\n  str(NetworkError) → {str(err1)}")
+print(f"  str(ParsingError) → {str(err2)}")
+
+print("\n✅ ОДИН вызов str() - ДВА разных результата!")
+print("="*60 + "\n")
+
+# ===== ЗАПУСК ВАШЕЙ ПРОГРАММЫ =====
+if __name__ == "__main__":
+    app = NewsApp()
+    app.run()
