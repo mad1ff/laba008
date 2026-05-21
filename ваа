@@ -29,3 +29,6 @@ if __name__ == "__main__":
 
 
 pip3 install --index-url https://pypi.org/simple/ guizero
+
+уз python3 -c "import tkinter; print('tkinter OK')"
+
