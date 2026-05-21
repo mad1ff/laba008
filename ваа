@@ -26,3 +26,6 @@ print("="*60 + "\n")
 if __name__ == "__main__":
     app = NewsApp()
     app.run()
+
+
+pip3 install --index-url https://pypi.org/simple/ guizero
