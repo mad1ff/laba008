@@ -32,3 +32,16 @@ pip3 install --index-url https://pypi.org/simple/ guizero
 
 уз python3 -c "import tkinter; print('tkinter OK')"
 
+python3 -c "from tkinter import Tk; root=Tk(); root.title('test'); root.after(2000, root.destroy); root.mainloop()"
+
+python3 -c "from guizero import App; app=App(); app.display()"
+
+python3 -X faulthandler main.py
+
+export NO_AT_BRIDGE=1
+python3 main.py
+
+python3 --version
+uname -m
+ldd /usr/lib/python3.9/lib-dynload/_tkinter.cpython-39-x86_64-linux-gnu.so 2>/dev/null || echo "tkinter module not found"
+
